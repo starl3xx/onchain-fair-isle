@@ -90,19 +90,20 @@ export function SuccessScreen({
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
     const castText = `Just m̶i̶n̶t̶e̶d̶ knitted Onchain Fair Isle #${tokenId} in ${palette.name} ❄️ Each one is unique and generated at mint... Knit yours now! 🧤`;
 
+    // Embed both the NFT image and the mini app
+    const nftImageUrl = `${baseUrl}/api/preview?seed=${tokenId}`;
+    const miniAppUrl = baseUrl;
+
+    const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}&embeds[]=${encodeURIComponent(nftImageUrl)}&embeds[]=${encodeURIComponent(miniAppUrl)}`;
+
     try {
       // Try Farcaster SDK first
-      await sdk.actions.openUrl(
-        `https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}&embeds[]=${encodeURIComponent(`${baseUrl}?tokenId=${tokenId}`)}`
-      );
+      await sdk.actions.openUrl(shareUrl);
     } catch {
       // Fallback to opening in new window
-      window.open(
-        `https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}&embeds[]=${encodeURIComponent(`${baseUrl}?tokenId=${tokenId}`)}`,
-        "_blank"
-      );
+      window.open(shareUrl, "_blank");
     }
-  }, [tokenId, palette.name, isRare]);
+  }, [tokenId, palette.name]);
 
   return (
     <div className="fade-in" style={{ textAlign: "center" }}>
