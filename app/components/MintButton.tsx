@@ -166,8 +166,8 @@ export function MintButton({
     : isWritePending
     ? "Confirm in Wallet..."
     : isConfirming
-    ? "Minting..."
-    : `Mint for ${MINT_PRICE} ETH`;
+    ? "Knitting..."
+    : `Knit for ${MINT_PRICE} ETH`;
 
   return (
     <button

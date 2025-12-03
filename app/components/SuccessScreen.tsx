@@ -55,7 +55,7 @@ export function SuccessScreen({
           marginBottom: "0.5rem",
         }}
       >
-        Minted!
+        Knitted!
       </h2>
 
       <p
@@ -115,7 +115,7 @@ export function SuccessScreen({
             cursor: "pointer",
           }}
         >
-          Mint Another
+          Knit another
         </button>
 
         <a
