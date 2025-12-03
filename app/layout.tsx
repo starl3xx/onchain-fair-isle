@@ -11,6 +11,7 @@ const miniAppEmbed = {
     title: "Knit your sweater",
     action: {
       type: "launch_miniapp",
+      name: "Onchain Fair Isle",
       url: baseUrl,
       splashImageUrl: `${baseUrl}/splash.png`,
       splashBackgroundColor: "#0a0a0a",
