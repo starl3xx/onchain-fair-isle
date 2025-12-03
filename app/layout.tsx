@@ -8,7 +8,7 @@ const miniAppEmbed = {
   version: "1",
   imageUrl: `${baseUrl}/image.png`,
   button: {
-    title: "Knit your sweater NFT",
+    title: "Knit your sweater NFT!",
     action: {
       type: "launch_miniapp",
       name: "Onchain Fair Isle",
