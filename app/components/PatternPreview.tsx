@@ -22,7 +22,13 @@ export function PatternPreview({
 
   const { svg, palette, isRare } = useMemo(() => {
     if (!mounted) return { svg: "", palette: { name: "", colors: [] }, isRare: false };
-    return renderFairIsle(seed);
+    const result = renderFairIsle(seed);
+    // Replace fixed dimensions with 100% to scale with container
+    const scaledSvg = result.svg.replace(
+      /width="800" height="800"/,
+      'width="100%" height="100%"'
+    );
+    return { ...result, svg: scaledSvg };
   }, [seed, mounted]);
 
   if (!mounted) {
