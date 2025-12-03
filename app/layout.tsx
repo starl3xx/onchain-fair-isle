@@ -2,21 +2,32 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "./providers";
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://onchain-fair-isle.vercel.app";
+
+const miniAppEmbed = {
+  version: "1",
+  imageUrl: `${baseUrl}/hero.png`,
+  button: {
+    title: "Knit your sweater",
+    action: {
+      type: "launch_miniapp",
+      url: baseUrl,
+      splashImageUrl: `${baseUrl}/splash.png`,
+      splashBackgroundColor: "#0a0a0a",
+    },
+  },
+};
+
 export const metadata: Metadata = {
   title: "Onchain Fair Isle",
   description: "Mint generative fair isle knitting pattern NFTs on Base",
   openGraph: {
     title: "Onchain Fair Isle",
     description: "Mint generative fair isle knitting pattern NFTs on Base",
-    images: ["/preview.png"],
+    images: ["/hero.png"],
   },
   other: {
-    "fc:frame": "vNext",
-    "fc:frame:image": `${process.env.NEXT_PUBLIC_BASE_URL}/api/preview`,
-    "fc:frame:button:1": "Mint Fair Isle",
-    "fc:frame:button:1:action": "tx",
-    "fc:frame:button:1:target": `${process.env.NEXT_PUBLIC_BASE_URL}/api/frame`,
-    "fc:frame:post_url": `${process.env.NEXT_PUBLIC_BASE_URL}/api/frame/success`,
+    "fc:miniapp": JSON.stringify(miniAppEmbed),
   },
 };
 
