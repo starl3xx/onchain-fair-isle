@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fair Isle Renderer Test</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2rem;
+      background: #0a0a0a;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    h1 {
+      text-align: center;
+      background: linear-gradient(135deg, #5b9bd5, #c8e0d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .controls {
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+    }
+    input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background: #111;
+      color: #fff;
+    }
+    button {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: #5b9bd5;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover { background: #4a8ac4; }
+    .preview {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .preview svg {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .info {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #111;
+      border-radius: 8px;
+    }
+    .palette-colors {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+    .swatch {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      max-width: 1200px;
+      margin: 2rem auto;
+    }
+    .gallery-item {
+      background: #111;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .gallery-item:hover { transform: scale(1.02); }
+    .gallery-item svg { width: 100%; height: auto; display: block; }
+    .gallery-item .label {
+      padding: 0.5rem;
+      font-size: 0.75rem;
+      color: #888;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Fair Isle Renderer</h1>
+
+  <div class="controls">
+    <input type="text" id="seedInput" placeholder="Enter seed (or leave blank for random)">
+    <button onclick="renderFromInput()">Generate</button>
+    <button onclick="renderRandom()">Random</button>
+    <button onclick="findRare()" style="background: linear-gradient(135deg, #ffd700, #ff6b00); color: #000;">Find Rare</button>
+  </div>
+
+  <div class="preview" id="preview"></div>
+
+  <h2 style="text-align: center; color: #666; margin-top: 3rem;">Gallery (10 random patterns)</h2>
+  <div class="gallery" id="gallery"></div>
+
+  <script type="module">
+    import { renderFairIsle } from '../lib/fairisle-renderer.js';
+
+    window.renderFromInput = function() {
+      const input = document.getElementById('seedInput').value.trim();
+      const seed = input ? parseInt(input) || Math.abs(hashString(input)) : Math.floor(Math.random() * 2147483647);
+      render(seed);
+    };
+
+    window.renderRandom = function() {
+      const seed = Math.floor(Math.random() * 2147483647);
+      document.getElementById('seedInput').value = seed;
+      render(seed);
+    };
+
+    window.findRare = function() {
+      let seed, isRare = false;
+      let attempts = 0;
+      while (!isRare && attempts < 1000) {
+        seed = Math.floor(Math.random() * 2147483647);
+        const rarityCheck = (Math.abs(seed) >> 8) % 100;
+        isRare = rarityCheck < 5;
+        attempts++;
+      }
+      document.getElementById('seedInput').value = seed;
+      render(seed);
+    };
+
+    function hashString(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+      }
+      return hash;
+    }
+
+    function render(seed) {
+      const { svg, palette, paletteIndex, isRare } = renderFairIsle(seed);
+      const preview = document.getElementById('preview');
+      const rareBadge = isRare ? '<span style="background: linear-gradient(135deg, #ffd700, #ff6b00); color: #000; padding: 2px 8px; border-radius: 4px; font-weight: bold; margin-left: 8px;">RARE</span>' : '';
+      preview.innerHTML = `
+        ${svg}
+        <div class="info">
+          <strong>${palette.name}</strong> (Palette ${paletteIndex})${rareBadge} - Seed: ${seed}
+          <div class="palette-colors">
+            ${palette.colors.map(c => `<div class="swatch" style="background:${c}"></div>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function initGallery() {
+      const gallery = document.getElementById('gallery');
+      for (let i = 0; i < 10; i++) {
+        const seed = Math.floor(Math.random() * 2147483647);
+        const { svg, palette, isRare } = renderFairIsle(seed);
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+        const rareBadge = isRare ? ' (Rare)' : '';
+        item.innerHTML = `${svg}<div class="label">${palette.name}${rareBadge} - ${seed}</div>`;
+        item.onclick = () => {
+          document.getElementById('seedInput').value = seed;
+          render(seed);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        gallery.appendChild(item);
+      }
+    }
+
+    // Init
+    renderRandom();
+    initGallery();
+  </script>
+</body>
+</html>
