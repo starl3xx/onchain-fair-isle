@@ -1,9 +1,45 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import sdk from "@farcaster/frame-sdk";
 import { PatternPreview } from "./PatternPreview";
 import { renderFairIsle } from "@/lib/fairisle-renderer";
+
+async function svgToPngBlob(svgString: string, width = 800, height = 800): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      reject(new Error("Could not get canvas context"));
+      return;
+    }
+
+    const img = new Image();
+    const svgBlob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(svgBlob);
+
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, width, height);
+      URL.revokeObjectURL(url);
+      canvas.toBlob((blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject(new Error("Failed to create blob"));
+        }
+      }, "image/png");
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Failed to load SVG"));
+    };
+
+    img.src = url;
+  });
+}
 
 interface SuccessScreenProps {
   tokenId: bigint;
@@ -17,7 +53,38 @@ export function SuccessScreen({
   onMintAnother,
 }: SuccessScreenProps) {
   const seed = Number(tokenId);
-  const { palette, isRare } = renderFairIsle(seed);
+  const { svg, palette, isRare } = renderFairIsle(seed);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = useCallback(async () => {
+    setIsSaving(true);
+    try {
+      const pngBlob = await svgToPngBlob(svg);
+      const file = new File([pngBlob], `fair-isle-${tokenId}.png`, { type: "image/png" });
+
+      // Try native share (works on mobile)
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: `Fair Isle #${tokenId}`,
+        });
+      } else {
+        // Fallback: trigger download
+        const url = URL.createObjectURL(pngBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `fair-isle-${tokenId}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error("Failed to save image:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [svg, tokenId]);
 
   const handleShare = useCallback(async () => {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
@@ -99,6 +166,25 @@ export function SuccessScreen({
           }}
         >
           Share on Warpcast
+        </button>
+
+        <button
+          onClick={handleSave}
+          disabled={isSaving}
+          style={{
+            width: "100%",
+            padding: "0.875rem",
+            fontSize: "1rem",
+            fontWeight: 600,
+            border: "none",
+            borderRadius: 12,
+            background: "linear-gradient(135deg, #10b981, #059669)",
+            color: "white",
+            cursor: isSaving ? "wait" : "pointer",
+            opacity: isSaving ? 0.7 : 1,
+          }}
+        >
+          {isSaving ? "Saving..." : "Save Image"}
         </button>
 
         <button
