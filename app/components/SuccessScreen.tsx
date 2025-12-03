@@ -21,7 +21,7 @@ export function SuccessScreen({
 
   const handleShare = useCallback(async () => {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
-    const castText = `Just minted Fair Isle #${tokenId} in ${palette.name}!${isRare ? " (Rare)" : ""}`;
+    const castText = `Just m̶i̶n̶t̶e̶d̶ knitted Onchain Fair Isle #${tokenId} in ${palette.name} ❄️ Each one is unique and generated at mint... Knit yours now! 🧤`;
 
     try {
       // Try Farcaster SDK first

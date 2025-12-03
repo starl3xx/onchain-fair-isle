@@ -3,10 +3,10 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "Fair Isle NFT",
+  title: "Onchain Fair Isle",
   description: "Mint generative fair isle knitting pattern NFTs on Base",
   openGraph: {
-    title: "Fair Isle NFT",
+    title: "Onchain Fair Isle",
     description: "Mint generative fair isle knitting pattern NFTs on Base",
     images: ["/preview.png"],
   },
