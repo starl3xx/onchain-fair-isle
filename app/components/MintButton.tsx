@@ -175,7 +175,7 @@ export function MintButton({
   const buttonText = !isReady
     ? "Loading..."
     : !isConnected
-    ? "Connect Wallet"
+    ? "Knit your sweater NFT!"
     : isWritePending
     ? "Confirm in Wallet..."
     : isConfirming
@@ -184,6 +184,40 @@ export function MintButton({
 
   return (
     <div style={{ width: "100%" }}>
+      {/* Mint Button */}
+      <button
+        onClick={handleMint}
+        disabled={isLoading || !isReady}
+        style={{
+          width: "100%",
+          padding: "1rem",
+          fontSize: "1.125rem",
+          fontWeight: 600,
+          border: "none",
+          borderRadius: 12,
+          background: isLoading
+            ? "#333"
+            : "linear-gradient(135deg, #5b9bd5, #2d5a8b)",
+          color: "white",
+          cursor: isLoading ? "not-allowed" : "pointer",
+          transition: "transform 0.1s, opacity 0.1s",
+          opacity: isLoading ? 0.7 : 1,
+        }}
+      >
+        {isLoading && (
+          <span
+            style={{
+              display: "inline-block",
+              marginRight: "0.5rem",
+            }}
+            className="spin"
+          >
+            &#9696;
+          </span>
+        )}
+        {buttonText}
+      </button>
+
       {/* User Profile Section */}
       {neynarUser && (
         <button
@@ -194,7 +228,7 @@ export function MintButton({
             alignItems: "center",
             gap: "0.75rem",
             padding: "0.75rem",
-            marginBottom: "0.75rem",
+            marginTop: "0.75rem",
             background: "rgba(255, 255, 255, 0.05)",
             border: "1px solid rgba(255, 255, 255, 0.1)",
             borderRadius: 12,
@@ -253,40 +287,6 @@ export function MintButton({
           </svg>
         </button>
       )}
-
-      {/* Mint Button */}
-      <button
-        onClick={handleMint}
-        disabled={isLoading || !isReady}
-        style={{
-          width: "100%",
-          padding: "1rem",
-          fontSize: "1.125rem",
-          fontWeight: 600,
-          border: "none",
-          borderRadius: 12,
-          background: isLoading
-            ? "#333"
-            : "linear-gradient(135deg, #5b9bd5, #2d5a8b)",
-          color: "white",
-          cursor: isLoading ? "not-allowed" : "pointer",
-          transition: "transform 0.1s, opacity 0.1s",
-          opacity: isLoading ? 0.7 : 1,
-        }}
-      >
-        {isLoading && (
-          <span
-            style={{
-              display: "inline-block",
-              marginRight: "0.5rem",
-            }}
-            className="spin"
-          >
-            &#9696;
-          </span>
-        )}
-        {buttonText}
-      </button>
     </div>
   );
 }
