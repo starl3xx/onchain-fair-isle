@@ -5,7 +5,7 @@ import sdk from "@farcaster/frame-sdk";
 import { PatternPreview } from "./PatternPreview";
 import { renderFairIsle } from "@/lib/fairisle-renderer";
 
-async function svgToPngBlob(svgString: string, width = 800, height = 800): Promise<Blob> {
+async function svgToPngBlob(svgString: string, width = 2000, height = 2000): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const canvas = document.createElement("canvas");
     canvas.width = width;
@@ -184,7 +184,7 @@ export function SuccessScreen({
             opacity: isSaving ? 0.7 : 1,
           }}
         >
-          {isSaving ? "Saving..." : "Save Image"}
+          {isSaving ? "Saving sweater..." : "Save sweater"}
         </button>
 
         <button
