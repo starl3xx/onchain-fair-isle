@@ -1,0 +1,27 @@
+{
+  "frame": {
+    "name": "Onchain Fair Isle",
+    "version": "1",
+    "iconUrl": "https://onchain-fair-isle.vercel.app/OFI-icon.png",
+    "homeUrl": "https://onchain-fair-isle.vercel.app",
+    "buttonTitle": "Knit your sweater now",
+    "splashImageUrl": "https://onchain-fair-isle.vercel.app/splash.png",
+    "splashBackgroundColor": "#0a0a0a",
+    "webhookUrl": "https://onchain-fair-isle.vercel.app/api/webhook",
+    "subtitle": "Generative NFT collection",
+    "description": "Fair Isle-inspired generative NFT collection on Base with 11 color palettes, countless patterns, and unlimited delight",
+    "primaryCategory": "art-creativity",
+    "heroImageUrl": "https://onchain-fair-isle.vercel.app/hero.png",
+    "tags": [
+      "nft",
+      "art",
+      "generative",
+      "holiday",
+      "base"
+    ],
+    "tagline": "Knit your Fair Isle sweater",
+    "ogTitle": "Onchain Fair Isle — Mint Now",
+    "ogDescription": "Generative Fair Isle-inspired NFT collection on Base",
+    "ogImageUrl": "https://onchain-fair-isle.vercel.app/hero.png"
+  }
+}
