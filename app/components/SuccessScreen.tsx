@@ -169,11 +169,7 @@ export function SuccessScreen({
             gap: "0.5rem",
           }}
         >
-          <svg width="18" height="18" viewBox="0 0 1000 1000" fill="currentColor">
-            <path d="M257.778 155.556h484.444v688.889h-71.111V528.889c0-39.111-31.667-70.778-70.778-70.778h-200c-39.111 0-70.778 31.667-70.778 70.778v315.556h-71.778V155.556z" />
-            <path d="M128.889 253.333l84.444-97.778h573.334l84.444 97.778h-742.222z" />
-            <path d="M244.444 844.444h71.111v71.111h-71.111v-71.111zM684.444 844.444h71.111v71.111h-71.111v-71.111z" />
-          </svg>
+          <img src="/FC.png" alt="" width={18} height={18} style={{ objectFit: "contain" }} />
           Share on Farcaster
         </button>
 
@@ -197,11 +193,7 @@ export function SuccessScreen({
             gap: "0.5rem",
           }}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-            <polyline points="17 21 17 13 7 13 7 21" />
-            <polyline points="7 3 7 8 15 8" />
-          </svg>
+          <img src="/download.png" alt="" width={18} height={18} style={{ objectFit: "contain" }} />
           {isSaving ? "Saving sweater..." : "Save sweater"}
         </button>
 
@@ -223,7 +215,7 @@ export function SuccessScreen({
             gap: "0.5rem",
           }}
         >
-          <span>✨</span>
+          <img src="/sparkle.png" alt="" width={18} height={18} style={{ objectFit: "contain" }} />
           Knit another NFT
         </button>
 
