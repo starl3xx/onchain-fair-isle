@@ -112,7 +112,7 @@ export function SuccessScreen({
           marginBottom: "1rem",
         }}
       >
-        &#10024;
+        ❄️
       </div>
 
       <h2
@@ -122,7 +122,7 @@ export function SuccessScreen({
           marginBottom: "0.5rem",
         }}
       >
-        Knitted!
+        Unique NFT knitted!
       </h2>
 
       <p
@@ -163,9 +163,18 @@ export function SuccessScreen({
             background: "linear-gradient(135deg, #8b5cf6, #6366f1)",
             color: "white",
             cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.5rem",
           }}
         >
-          Share on Warpcast
+          <svg width="18" height="18" viewBox="0 0 1000 1000" fill="currentColor">
+            <path d="M257.778 155.556h484.444v688.889h-71.111V528.889c0-39.111-31.667-70.778-70.778-70.778h-200c-39.111 0-70.778 31.667-70.778 70.778v315.556h-71.778V155.556z" />
+            <path d="M128.889 253.333l84.444-97.778h573.334l84.444 97.778h-742.222z" />
+            <path d="M244.444 844.444h71.111v71.111h-71.111v-71.111zM684.444 844.444h71.111v71.111h-71.111v-71.111z" />
+          </svg>
+          Share on Farcaster
         </button>
 
         <button
@@ -182,8 +191,17 @@ export function SuccessScreen({
             color: "white",
             cursor: isSaving ? "wait" : "pointer",
             opacity: isSaving ? 0.7 : 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.5rem",
           }}
         >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+            <polyline points="17 21 17 13 7 13 7 21" />
+            <polyline points="7 3 7 8 15 8" />
+          </svg>
           {isSaving ? "Saving sweater..." : "Save sweater"}
         </button>
 
@@ -199,9 +217,14 @@ export function SuccessScreen({
             background: "linear-gradient(135deg, #5b9bd5, #2d5a8b)",
             color: "white",
             cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.5rem",
           }}
         >
-          Knit another
+          <span>✨</span>
+          Knit another NFT
         </button>
 
         <a
