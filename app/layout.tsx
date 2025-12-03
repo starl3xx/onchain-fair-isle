@@ -6,7 +6,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://onchain-fair-isle.v
 
 const miniAppEmbed = {
   version: "1",
-  imageUrl: `${baseUrl}/hero.png`,
+  imageUrl: `${baseUrl}/image.png`,
   button: {
     title: "Knit your sweater",
     action: {
