@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { PatternPreview } from "./components/PatternPreview";
 import { MintButton } from "./components/MintButton";
 import { SuccessScreen } from "./components/SuccessScreen";
+import { Snowfall } from "./components/Snowfall";
 
 type AppState = "preview" | "minting" | "success" | "error";
 
@@ -43,7 +44,7 @@ export default function Home() {
   }, []);
 
   const handleMintError = useCallback((err: Error) => {
-    setError(err.message || "Mint failed. Please try again.");
+    setError(err.message || "Knit failed. Please try again.");
     setState("error");
   }, []);
 
@@ -67,14 +68,20 @@ export default function Home() {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
+        position: "relative",
       }}
     >
+      {/* Snow Effect */}
+      <Snowfall />
+
       {/* Header */}
       <header
         style={{
           textAlign: "center",
           padding: "2rem 1rem",
           borderBottom: "1px solid #222",
+          position: "relative",
+          zIndex: 1,
         }}
       >
         <h1
@@ -88,7 +95,7 @@ export default function Home() {
             margin: 0,
           }}
         >
-          Fair Isle
+          Onchain Fair Isle
         </h1>
         <p
           style={{
@@ -97,7 +104,7 @@ export default function Home() {
             fontSize: "0.875rem",
           }}
         >
-          Generative Knit Patterns on Base
+          Fair Isle-inspired generative NFT collection on Base
         </p>
       </header>
 
@@ -109,6 +116,8 @@ export default function Home() {
           margin: "0 auto",
           padding: "2rem 1rem",
           width: "100%",
+          position: "relative",
+          zIndex: 1,
         }}
       >
         {/* Success State */}
@@ -175,9 +184,14 @@ export default function Home() {
                   marginBottom: "1rem",
                 }}
               >
-                {state === "minting"
-                  ? "Your pattern is being minted..."
-                  : "Each mint generates a unique pattern"}
+                {state === "minting" ? (
+                  "Your pattern is being knitted..."
+                ) : (
+                  <>
+                    <strong style={{ color: "#888" }}>Preview only</strong>{" "}
+                    <span style={{ color: "#5b9bd5" }}>✦</span> Each mint generates a unique pattern
+                  </>
+                )}
               </p>
 
               <div
@@ -205,7 +219,7 @@ export default function Home() {
                     cursor: "pointer",
                   }}
                 >
-                  Shuffle Preview
+                  Shuffle preview
                 </button>
               )}
             </section>
@@ -236,7 +250,7 @@ export default function Home() {
                       letterSpacing: "0.05em",
                     }}
                   >
-                    Minted
+                    Knitted
                   </span>
                   <span
                     style={{
@@ -307,34 +321,21 @@ export default function Home() {
           borderTop: "1px solid #222",
           color: "#666",
           fontSize: "0.875rem",
+          position: "relative",
+          zIndex: 1,
         }}
       >
-        <p>Fully on-chain generative art</p>
-        <div
-          style={{
-            display: "flex",
-            gap: "1.5rem",
-            justifyContent: "center",
-            marginTop: "0.75rem",
-          }}
-        >
+        <p>
+          Made with 🌠 by{" "}
           <a
-            href={`https://basescan.org/address/${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}`}
+            href="https://warpcast.com/starl3xx"
             target="_blank"
             rel="noopener noreferrer"
             style={{ color: "#5b9bd5" }}
           >
-            Contract
+            @starl3xx
           </a>
-          <a
-            href={`https://opensea.io/collection/fair-isle`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "#5b9bd5" }}
-          >
-            OpenSea
-          </a>
-        </div>
+        </p>
       </footer>
     </main>
   );
