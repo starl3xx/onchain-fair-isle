@@ -90,8 +90,8 @@ export function SuccessScreen({
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
     const castText = `Just m̶i̶n̶t̶e̶d̶ knitted Onchain Fair Isle #${tokenId} in ${palette.name} ❄️ Each one is unique and generated at mint... Knit yours now! 🧤`;
 
-    // Embed both the NFT image and the mini app
-    const nftImageUrl = `${baseUrl}/api/preview?seed=${tokenId}`;
+    // Embed both the NFT image (PNG) and the mini app
+    const nftImageUrl = `${baseUrl}/api/preview/png?seed=${tokenId}`;
     const miniAppUrl = baseUrl;
 
     const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}&embeds[]=${encodeURIComponent(nftImageUrl)}&embeds[]=${encodeURIComponent(miniAppUrl)}`;
