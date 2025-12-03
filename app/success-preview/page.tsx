@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { SuccessScreen } from "../components/SuccessScreen";
+import { Snowfall } from "../components/Snowfall";
 
 export default function SuccessPreviewPage() {
   const [seed, setSeed] = useState<number>(() => Math.floor(Math.random() * 2147483647));
@@ -33,7 +34,13 @@ export default function SuccessPreviewPage() {
       background: "#0a0a0a",
       color: "#fff",
       fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
     }}>
+      {/* Snow Effect */}
+      <Snowfall />
+
       {/* Controls bar */}
       <div style={{
         position: "sticky",
@@ -104,9 +111,12 @@ export default function SuccessPreviewPage() {
 
       {/* Success Screen Preview */}
       <div style={{
+        flex: 1,
         maxWidth: 420,
         margin: "0 auto",
         padding: "2rem 1rem",
+        position: "relative",
+        zIndex: 1,
       }}>
         <SuccessScreen
           tokenId={BigInt(seed)}
@@ -114,6 +124,31 @@ export default function SuccessPreviewPage() {
           onMintAnother={handleMintAnother}
         />
       </div>
+
+      {/* Footer */}
+      <footer
+        style={{
+          textAlign: "center",
+          padding: "1.5rem",
+          borderTop: "1px solid #222",
+          color: "#666",
+          fontSize: "0.875rem",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        <p>
+          Made with 🌠 by{" "}
+          <a
+            href="https://warpcast.com/starl3xx"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "#5b9bd5" }}
+          >
+            @starl3xx
+          </a>
+        </p>
+      </footer>
     </div>
   );
 }
