@@ -15,12 +15,13 @@ export async function GET(
       );
     }
 
-    // Generate the SVG deterministically from the tokenId
-    const { svg, palette, isRare } = renderFairIsle(tokenId);
+    // Generate the pattern data from the tokenId
+    const { palette, isRare } = renderFairIsle(tokenId);
 
-    // Convert SVG to base64 data URI
-    const svgBase64 = Buffer.from(svg).toString("base64");
-    const imageDataUri = `data:image/svg+xml;base64,${svgBase64}`;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://onchain-fair-isle.vercel.app";
+
+    // Use URL for image instead of data URI (better OpenSea compatibility)
+    const imageUrl = `${baseUrl}/api/preview?seed=${tokenId}`;
 
     // Build attributes
     const attributes = [
@@ -42,11 +43,11 @@ export async function GET(
     });
 
     const metadata = {
-      name: `Fair Isle #${tokenId}`,
+      name: `Onchain Fair Isle #${tokenId}`,
       description:
         "A generative fair isle knitting pattern, deterministically created on-chain.",
-      image: imageDataUri,
-      external_url: `${process.env.NEXT_PUBLIC_BASE_URL}?tokenId=${tokenId}`,
+      image: imageUrl,
+      external_url: `${baseUrl}?tokenId=${tokenId}`,
       attributes,
     };
 
