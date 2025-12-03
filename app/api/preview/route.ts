@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-// @ts-ignore - JS module
 import { renderFairIsle } from "@/lib/fairisle-renderer";
 
 export async function GET(request: NextRequest) {

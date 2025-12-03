@@ -3,7 +3,6 @@
 import { useCallback } from "react";
 import sdk from "@farcaster/frame-sdk";
 import { PatternPreview } from "./PatternPreview";
-// @ts-ignore - JS module
 import { renderFairIsle } from "@/lib/fairisle-renderer";
 
 interface SuccessScreenProps {

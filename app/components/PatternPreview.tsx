@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-// @ts-ignore - JS module
-import { renderFairIsle } from "@/lib/fairisle-renderer";
+import { renderFairIsle, type RenderResult } from "@/lib/fairisle-renderer";
 
 interface PatternPreviewProps {
   seed: number;
