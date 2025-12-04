@@ -86,11 +86,14 @@ export function SuccessScreen({
     }
   }, [svg, tokenId]);
 
-  // Pre-warm the image cache on mount
+  // Pre-warm caches on mount for faster sharing
   useEffect(() => {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+    // Pre-warm PNG image
     const img = new Image();
     img.src = `${baseUrl}/api/preview/png?seed=${tokenId}&size=400`;
+    // Pre-warm page metadata for mini app embed
+    fetch(baseUrl, { mode: "no-cors" }).catch(() => {});
   }, [tokenId]);
 
   const handleShare = useCallback(async () => {
