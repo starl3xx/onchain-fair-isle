@@ -88,7 +88,7 @@ export function SuccessScreen({
 
   const handleShare = useCallback(async () => {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
-    const castText = `Just m̶i̶n̶t̶e̶d̶ knitted Onchain Fair Isle #${tokenId} in ${palette.name} ❄️ Each one is unique and generated at mint... Knit yours now! 🧤`;
+    const castText = `Just m̶i̶n̶t̶e̶d̶ knitted Onchain Fair Isle #${tokenId} in ${palette.name} ❄️ Each one is unique and generated at mint... Knit yours now! 🧶`;
 
     // Embed both the NFT image (PNG) and the mini app
     const nftImageUrl = `${baseUrl}/api/preview/png?seed=${tokenId}`;
