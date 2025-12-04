@@ -90,17 +90,18 @@ export function SuccessScreen({
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
     const castText = `Just m̶i̶n̶t̶e̶d̶ knitted Onchain Fair Isle #${tokenId} in ${palette.name} ❄️ Each one is unique and generated at mint... Knit yours now! 🧶`;
 
-    // Embed both the NFT image (PNG) and the mini app
-    const nftImageUrl = `${baseUrl}/api/preview/png?seed=${tokenId}`;
+    // Embed the mini app URL for the frame embed
     const miniAppUrl = baseUrl;
 
-    const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}&embeds[]=${encodeURIComponent(nftImageUrl)}&embeds[]=${encodeURIComponent(miniAppUrl)}`;
-
     try {
-      // Try Farcaster SDK first
-      await sdk.actions.openUrl(shareUrl);
+      // Use composeCast for proper embed support in mini apps
+      await sdk.actions.composeCast({
+        text: castText,
+        embeds: [miniAppUrl],
+      });
     } catch {
-      // Fallback to opening in new window
+      // Fallback to Warpcast compose URL
+      const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}&embeds[]=${encodeURIComponent(miniAppUrl)}`;
       window.open(shareUrl, "_blank");
     }
   }, [tokenId, palette.name]);
