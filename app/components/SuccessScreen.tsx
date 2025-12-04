@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import sdk from "@farcaster/frame-sdk";
 import { PatternPreview } from "./PatternPreview";
 import { renderFairIsle } from "@/lib/fairisle-renderer";
@@ -86,12 +86,19 @@ export function SuccessScreen({
     }
   }, [svg, tokenId]);
 
+  // Pre-warm the image cache on mount
+  useEffect(() => {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+    const img = new Image();
+    img.src = `${baseUrl}/api/preview/png?seed=${tokenId}&size=400`;
+  }, [tokenId]);
+
   const handleShare = useCallback(async () => {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
     const castText = `Just m̶i̶n̶t̶e̶d̶ knitted Onchain Fair Isle #${tokenId} in ${palette.name} ❄️ Each one is unique and generated at mint... Knit yours now! 🧶`;
 
-    // Embed the NFT image and the mini app
-    const nftImageUrl = `${baseUrl}/api/preview/png?seed=${tokenId}`;
+    // Embed the NFT image (smaller size for faster loading) and the mini app
+    const nftImageUrl = `${baseUrl}/api/preview/png?seed=${tokenId}&size=400`;
     const miniAppUrl = baseUrl;
 
     try {
