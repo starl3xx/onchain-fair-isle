@@ -1,10 +1,23 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { useReadContract } from "wagmi";
 import { PatternPreview } from "./components/PatternPreview";
 import { MintButton } from "./components/MintButton";
 import { SuccessScreen } from "./components/SuccessScreen";
 import { Snowfall } from "./components/Snowfall";
+
+const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
+
+const CONTRACT_ABI = [
+  {
+    name: "totalSupply",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+] as const;
 
 type AppState = "preview" | "minting" | "success" | "error";
 
@@ -18,7 +31,15 @@ export default function Home() {
   const [previewSeed, setPreviewSeed] = useState<number>(0);
   const [mintResult, setMintResult] = useState<MintResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [totalSupply, setTotalSupply] = useState<number | null>(null);
+
+  // Fetch total supply from contract
+  const { data: totalSupplyData, refetch: refetchTotalSupply } = useReadContract({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    functionName: "totalSupply",
+  });
+
+  const totalSupply = totalSupplyData !== undefined ? Number(totalSupplyData) : null;
 
   // Initialize with random seed on client
   useEffect(() => {
@@ -39,9 +60,9 @@ export default function Home() {
   const handleMintSuccess = useCallback((tokenId: bigint, txHash: string) => {
     setMintResult({ tokenId, txHash });
     setState("success");
-    // Update total supply
-    setTotalSupply((prev) => (prev !== null ? prev + 1 : 1));
-  }, []);
+    // Refetch total supply from contract
+    refetchTotalSupply();
+  }, [refetchTotalSupply]);
 
   const handleMintError = useCallback((err: Error) => {
     setError(err.message || "Knit failed. Please try again.");

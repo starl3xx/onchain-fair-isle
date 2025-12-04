@@ -12,6 +12,7 @@ import {
 import { parseEther } from "viem";
 import { base } from "wagmi/chains";
 import sdk from "@farcaster/frame-sdk";
+import { useNeynarUser } from "@/app/hooks/useNeynarUser";
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
 const MINT_PRICE = "0.002";
@@ -51,6 +52,7 @@ export function MintButton({
   const { connect, connectors } = useConnect();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
+  const { user: neynarUser, isLoading: isLoadingUser } = useNeynarUser();
 
   const {
     data: hash,
@@ -119,6 +121,17 @@ export function MintButton({
     }
   }, [connect, connectors]);
 
+  const handleOpenProfile = useCallback(async () => {
+    if (!neynarUser?.username) return;
+
+    const profileUrl = `https://warpcast.com/${neynarUser.username}`;
+    try {
+      await sdk.actions.openUrl(profileUrl);
+    } catch {
+      window.open(profileUrl, "_blank");
+    }
+  }, [neynarUser?.username]);
+
   const handleMint = useCallback(async () => {
     if (!isConnected) {
       await handleConnect();
@@ -162,7 +175,7 @@ export function MintButton({
   const buttonText = !isReady
     ? "Loading..."
     : !isConnected
-    ? "Connect Wallet"
+    ? "Knit your sweater NFT!"
     : isWritePending
     ? "Confirm in Wallet..."
     : isConfirming
@@ -170,37 +183,110 @@ export function MintButton({
     : `Knit for ${MINT_PRICE} ETH`;
 
   return (
-    <button
-      onClick={handleMint}
-      disabled={isLoading || !isReady}
-      style={{
-        width: "100%",
-        padding: "1rem",
-        fontSize: "1.125rem",
-        fontWeight: 600,
-        border: "none",
-        borderRadius: 12,
-        background: isLoading
-          ? "#333"
-          : "linear-gradient(135deg, #5b9bd5, #2d5a8b)",
-        color: "white",
-        cursor: isLoading ? "not-allowed" : "pointer",
-        transition: "transform 0.1s, opacity 0.1s",
-        opacity: isLoading ? 0.7 : 1,
-      }}
-    >
-      {isLoading && (
-        <span
+    <div style={{ width: "100%" }}>
+      {/* Mint Button */}
+      <button
+        onClick={handleMint}
+        disabled={isLoading || !isReady}
+        style={{
+          width: "100%",
+          padding: "1rem",
+          fontSize: "1.125rem",
+          fontWeight: 600,
+          border: "none",
+          borderRadius: 12,
+          background: isLoading
+            ? "#333"
+            : "linear-gradient(135deg, #5b9bd5, #2d5a8b)",
+          color: "white",
+          cursor: isLoading ? "not-allowed" : "pointer",
+          transition: "transform 0.1s, opacity 0.1s",
+          opacity: isLoading ? 0.7 : 1,
+        }}
+      >
+        {isLoading && (
+          <span
+            style={{
+              display: "inline-block",
+              marginRight: "0.5rem",
+            }}
+            className="spin"
+          >
+            &#9696;
+          </span>
+        )}
+        {buttonText}
+      </button>
+
+      {/* User Profile Section */}
+      {neynarUser && (
+        <button
+          onClick={handleOpenProfile}
           style={{
-            display: "inline-block",
-            marginRight: "0.5rem",
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
+            padding: "0.75rem",
+            marginTop: "0.75rem",
+            background: "rgba(255, 255, 255, 0.05)",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: 12,
+            cursor: "pointer",
+            transition: "background 0.2s",
           }}
-          className="spin"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "rgba(255, 255, 255, 0.1)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)";
+          }}
         >
-          &#9696;
-        </span>
+          <img
+            src={neynarUser.pfpUrl}
+            alt={neynarUser.displayName}
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: "50%",
+              objectFit: "cover",
+            }}
+          />
+          <div style={{ flex: 1, textAlign: "left" }}>
+            <div
+              style={{
+                fontWeight: 600,
+                fontSize: "0.9375rem",
+                color: "white",
+              }}
+            >
+              {neynarUser.displayName}
+            </div>
+            <div
+              style={{
+                fontSize: "0.8125rem",
+                color: "#888",
+              }}
+            >
+              @{neynarUser.username}
+            </div>
+          </div>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#888"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
+        </button>
       )}
-      {buttonText}
-    </button>
+    </div>
   );
 }

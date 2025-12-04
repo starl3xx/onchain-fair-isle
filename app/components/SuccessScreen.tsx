@@ -88,21 +88,22 @@ export function SuccessScreen({
 
   const handleShare = useCallback(async () => {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
-    const castText = `Just m̶i̶n̶t̶e̶d̶ knitted Onchain Fair Isle #${tokenId} in ${palette.name} ❄️ Each one is unique and generated at mint... Knit yours now! 🧤`;
+    const castText = `Just m̶i̶n̶t̶e̶d̶ knitted Onchain Fair Isle #${tokenId} in ${palette.name} ❄️ Each one is unique and generated at mint... Knit yours now! 🧶`;
+
+    // Embed both the NFT image (PNG) and the mini app
+    const nftImageUrl = `${baseUrl}/api/preview/png?seed=${tokenId}`;
+    const miniAppUrl = baseUrl;
+
+    const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}&embeds[]=${encodeURIComponent(nftImageUrl)}&embeds[]=${encodeURIComponent(miniAppUrl)}`;
 
     try {
       // Try Farcaster SDK first
-      await sdk.actions.openUrl(
-        `https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}&embeds[]=${encodeURIComponent(`${baseUrl}?tokenId=${tokenId}`)}`
-      );
+      await sdk.actions.openUrl(shareUrl);
     } catch {
       // Fallback to opening in new window
-      window.open(
-        `https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}&embeds[]=${encodeURIComponent(`${baseUrl}?tokenId=${tokenId}`)}`,
-        "_blank"
-      );
+      window.open(shareUrl, "_blank");
     }
-  }, [tokenId, palette.name, isRare]);
+  }, [tokenId, palette.name]);
 
   return (
     <div className="fade-in" style={{ textAlign: "center" }}>
@@ -169,11 +170,7 @@ export function SuccessScreen({
             gap: "0.5rem",
           }}
         >
-          <svg width="18" height="18" viewBox="0 0 1000 1000" fill="currentColor">
-            <path d="M257.778 155.556h484.444v688.889h-71.111V528.889c0-39.111-31.667-70.778-70.778-70.778h-200c-39.111 0-70.778 31.667-70.778 70.778v315.556h-71.778V155.556z" />
-            <path d="M128.889 253.333l84.444-97.778h573.334l84.444 97.778h-742.222z" />
-            <path d="M244.444 844.444h71.111v71.111h-71.111v-71.111zM684.444 844.444h71.111v71.111h-71.111v-71.111z" />
-          </svg>
+          <img src="/FC.png" alt="" width={18} height={18} style={{ objectFit: "contain" }} />
           Share on Farcaster
         </button>
 
@@ -197,11 +194,7 @@ export function SuccessScreen({
             gap: "0.5rem",
           }}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
-            <polyline points="17 21 17 13 7 13 7 21" />
-            <polyline points="7 3 7 8 15 8" />
-          </svg>
+          <img src="/download.png" alt="" width={18} height={18} style={{ objectFit: "contain" }} />
           {isSaving ? "Saving sweater..." : "Save sweater"}
         </button>
 
@@ -223,7 +216,7 @@ export function SuccessScreen({
             gap: "0.5rem",
           }}
         >
-          <span>✨</span>
+          <img src="/sparkle.png" alt="" width={18} height={18} style={{ objectFit: "contain" }} />
           Knit another NFT
         </button>
 
