@@ -20,8 +20,11 @@ export async function GET(
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://onchain-fair-isle.vercel.app";
 
-    // Use URL for image instead of data URI (better OpenSea compatibility)
-    const imageUrl = `${baseUrl}/api/preview?seed=${tokenId}`;
+    // Point at the rasterized PNG, not the raw SVG. The SVG is ~8.3 MB of
+    // 50k elements (one per stitch), which marketplace image pipelines choke
+    // on — the same art as a PNG is ~35 KB. Cached immutably at the edge, so
+    // only the first request per token pays the rasterize cost.
+    const imageUrl = `${baseUrl}/api/preview/png?seed=${tokenId}`;
 
     // Build attributes
     const attributes = [
