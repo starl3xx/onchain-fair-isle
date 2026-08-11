@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import sdk from "@farcaster/frame-sdk";
 import { PatternPreview } from "./PatternPreview";
 import { renderFairIsle } from "@/lib/fairisle-renderer";
@@ -86,21 +86,33 @@ export function SuccessScreen({
     }
   }, [svg, tokenId]);
 
+  // Pre-warm caches on mount for faster sharing
+  useEffect(() => {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
+    // Pre-warm PNG image
+    const img = new Image();
+    img.src = `${baseUrl}/api/preview/png?seed=${tokenId}&size=400`;
+    // Pre-warm page metadata for mini app embed
+    fetch(baseUrl, { mode: "no-cors" }).catch(() => {});
+  }, [tokenId]);
+
   const handleShare = useCallback(async () => {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
     const castText = `Just m̶i̶n̶t̶e̶d̶ knitted Onchain Fair Isle #${tokenId} in ${palette.name} ❄️ Each one is unique and generated at mint... Knit yours now! 🧶`;
 
-    // Embed both the NFT image (PNG) and the mini app
-    const nftImageUrl = `${baseUrl}/api/preview/png?seed=${tokenId}`;
+    // Embed the NFT image (smaller size for faster loading) and the mini app
+    const nftImageUrl = `${baseUrl}/api/preview/png?seed=${tokenId}&size=400`;
     const miniAppUrl = baseUrl;
 
-    const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}&embeds[]=${encodeURIComponent(nftImageUrl)}&embeds[]=${encodeURIComponent(miniAppUrl)}`;
-
     try {
-      // Try Farcaster SDK first
-      await sdk.actions.openUrl(shareUrl);
+      // Use composeCast for proper embed support in mini apps
+      await sdk.actions.composeCast({
+        text: castText,
+        embeds: [nftImageUrl, miniAppUrl],
+      });
     } catch {
-      // Fallback to opening in new window
+      // Fallback to Warpcast compose URL
+      const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(castText)}&embeds[]=${encodeURIComponent(nftImageUrl)}&embeds[]=${encodeURIComponent(miniAppUrl)}`;
       window.open(shareUrl, "_blank");
     }
   }, [tokenId, palette.name]);
