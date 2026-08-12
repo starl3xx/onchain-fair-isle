@@ -19,14 +19,14 @@ const nextConfig = {
         permanent: false,
         basePath: false,
       },
-      // The mini-app manifest must stay at the domain root. NOTE: the hosted
-      // manifest this points at currently 404s at Farcaster ("Hosted miniapp
-      // manifest not found") — the registration needs to be redone from the
-      // Farcaster developer tools, which only the account owner can sign.
+      // The mini-app manifest must serve from the domain root. Self-hosted
+      // now: the previous registration lived only in Farcaster's hosted-
+      // manifest service and silently died there. A same-origin 307 (the
+      // pattern Farcaster's own docs use) — a basePath:false *rewrite* to an
+      // internal path is rejected by Next as an invalid external rewrite.
       {
         source: "/.well-known/farcaster.json",
-        destination:
-          "https://api.farcaster.xyz/miniapps/hosted-manifest/019ae2d4-2c37-09ba-db87-6614196d33f0",
+        destination: "/fairisle/api/manifest",
         permanent: false,
         basePath: false,
       },
