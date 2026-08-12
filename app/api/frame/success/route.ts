@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { CANONICAL_ORIGIN } from "@/lib/urls";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://your-domain.com";
+const BASE_URL = CANONICAL_ORIGIN;
 
 export async function POST(request: NextRequest) {
   try {

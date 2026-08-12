@@ -16,7 +16,8 @@ export interface NeynarUser {
 }
 
 async function fetchNeynarUser(fid: number): Promise<NeynarUser> {
-  const response = await fetch(`/api/neynar/user?fid=${fid}`);
+  // Raw fetch — Next's basePath doesn't rewrite these, so prefix by hand.
+  const response = await fetch(`/fairisle/api/neynar/user?fid=${fid}`);
   if (!response.ok) {
     throw new Error("Failed to fetch user");
   }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { renderFairIsle } from "@/lib/fairisle-renderer";
+import { CANONICAL_ORIGIN } from "@/lib/urls";
 
 export async function GET(
   request: NextRequest,
@@ -16,17 +17,21 @@ export async function GET(
     }
 
     // Generate the pattern data from the tokenId
-    const { palette, isRare } = renderFairIsle(tokenId);
+    const { palette, isRare, hasGiantSnowflake } = renderFairIsle(tokenId);
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://onchain-fair-isle.vercel.app";
-
+    // All URLs are canonical (starl3xx.fun/fairisle), never the vercel.app
+    // host — vercel.app links in this JSON are what got the collection
+    // delisted from OpenSea.
+    //
     // Point at the rasterized PNG, not the raw SVG. The SVG is ~8.3 MB of
     // 50k elements (one per stitch), which marketplace image pipelines choke
     // on — the same art as a PNG is ~35 KB. Cached immutably at the edge, so
     // only the first request per token pays the rasterize cost.
-    const imageUrl = `${baseUrl}/api/preview/png?seed=${tokenId}`;
+    const imageUrl = `${CANONICAL_ORIGIN}/api/preview/png?seed=${tokenId}`;
 
-    // Build attributes
+    // Build attributes. Has Giant Snowflake comes from the renderer itself —
+    // the old closed-form check here disagreed with the actual art, because
+    // the real draw happens mid-sequence after many RNG advances.
     const attributes = [
       {
         trait_type: "Palette",
@@ -36,21 +41,18 @@ export async function GET(
         trait_type: "Palette Type",
         value: isRare ? "Rare" : "Standard",
       },
+      {
+        trait_type: "Has Giant Snowflake",
+        value: hasGiantSnowflake ? "Yes" : "No",
+      },
     ];
-
-    // Check for giant snowflake (20% chance based on seed)
-    const hasGiantSnowflake = ((tokenId + 1000) * 16807) % 100 < 20;
-    attributes.push({
-      trait_type: "Has Giant Snowflake",
-      value: hasGiantSnowflake ? "Yes" : "No",
-    });
 
     const metadata = {
       name: `Onchain Fair Isle #${tokenId}`,
       description:
         "A generative fair isle knitting pattern, deterministically created on-chain.",
       image: imageUrl,
-      external_url: `${baseUrl}?tokenId=${tokenId}`,
+      external_url: `${CANONICAL_ORIGIN}/token/${tokenId}`,
       attributes,
     };
 

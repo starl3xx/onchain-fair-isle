@@ -204,14 +204,14 @@ export default function TestPage() {
           justifyContent: "center",
         }}>
           <a
-            href={`/api/metadata/${seed}`}
+            href={`/fairisle/api/metadata/${seed}`}
             target="_blank"
             style={{ color: "#5b9bd5" }}
           >
             View Metadata JSON
           </a>
           <a
-            href={`/api/preview?seed=${seed}`}
+            href={`/fairisle/api/preview?seed=${seed}`}
             target="_blank"
             style={{ color: "#5b9bd5" }}
           >

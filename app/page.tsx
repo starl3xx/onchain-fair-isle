@@ -346,6 +346,11 @@ export default function Home() {
           zIndex: 1,
         }}
       >
+        <p style={{ marginBottom: "0.5rem" }}>
+          <a href="/fairisle/collection" style={{ color: "#5b9bd5" }}>
+            View the collection →
+          </a>
+        </p>
         <p>
           Made with 🌠 by{" "}
           <a

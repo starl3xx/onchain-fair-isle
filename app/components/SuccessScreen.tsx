@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import sdk from "@farcaster/frame-sdk";
 import { PatternPreview } from "./PatternPreview";
 import { renderFairIsle } from "@/lib/fairisle-renderer";
+import { CANONICAL_ORIGIN, MINIAPP_ORIGIN } from "@/lib/urls";
 
 async function svgToPngBlob(svgString: string, width = 2000, height = 2000): Promise<Blob> {
   return new Promise((resolve, reject) => {
@@ -86,23 +87,23 @@ export function SuccessScreen({
     }
   }, [svg, tokenId]);
 
-  // Pre-warm caches on mount for faster sharing
+  // Pre-warm caches on mount for faster sharing. The image is canonical
+  // (what gets embedded); the page pre-warm hits the mini-app origin, since
+  // that's the URL the cast embed will launch.
   useEffect(() => {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
-    // Pre-warm PNG image
     const img = new Image();
-    img.src = `${baseUrl}/api/preview/png?seed=${tokenId}&size=400`;
-    // Pre-warm page metadata for mini app embed
-    fetch(baseUrl, { mode: "no-cors" }).catch(() => {});
+    img.src = `${CANONICAL_ORIGIN}/api/preview/png?seed=${tokenId}&size=400`;
+    fetch(MINIAPP_ORIGIN, { mode: "no-cors" }).catch(() => {});
   }, [tokenId]);
 
   const handleShare = useCallback(async () => {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
     const castText = `Just m̶i̶n̶t̶e̶d̶ knitted Onchain Fair Isle #${tokenId} in ${palette.name} ❄️ Each one is unique and generated at mint... Knit yours now! 🧶`;
 
-    // Embed the NFT image (smaller size for faster loading) and the mini app
-    const nftImageUrl = `${baseUrl}/api/preview/png?seed=${tokenId}&size=400`;
-    const miniAppUrl = baseUrl;
+    // Embed the NFT image (smaller size for faster loading) and the mini app.
+    // The mini-app embed URL must live on the domain the manifest is
+    // registered under, so it uses MINIAPP_ORIGIN, not the canonical host.
+    const nftImageUrl = `${CANONICAL_ORIGIN}/api/preview/png?seed=${tokenId}&size=400`;
+    const miniAppUrl = MINIAPP_ORIGIN;
 
     try {
       // Use composeCast for proper embed support in mini apps
@@ -182,7 +183,7 @@ export function SuccessScreen({
             gap: "0.5rem",
           }}
         >
-          <img src="/FC.png" alt="" width={18} height={18} style={{ objectFit: "contain" }} />
+          <img src="/fairisle/FC.png" alt="" width={18} height={18} style={{ objectFit: "contain" }} />
           Share on Farcaster
         </button>
 
@@ -206,7 +207,7 @@ export function SuccessScreen({
             gap: "0.5rem",
           }}
         >
-          <img src="/download.png" alt="" width={18} height={18} style={{ objectFit: "contain" }} />
+          <img src="/fairisle/download.png" alt="" width={18} height={18} style={{ objectFit: "contain" }} />
           {isSaving ? "Saving sweater..." : "Save sweater"}
         </button>
 
@@ -228,7 +229,7 @@ export function SuccessScreen({
             gap: "0.5rem",
           }}
         >
-          <img src="/sparkle.png" alt="" width={18} height={18} style={{ objectFit: "contain" }} />
+          <img src="/fairisle/sparkle.png" alt="" width={18} height={18} style={{ objectFit: "contain" }} />
           Knit another NFT
         </button>
 

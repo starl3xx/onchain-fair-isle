@@ -10,6 +10,8 @@ declare module "@/lib/fairisle-renderer" {
     palette: Palette;
     paletteIndex: number;
     isRare: boolean;
+    /** Whether the band sequence actually landed the giant snowflake center. */
+    hasGiantSnowflake: boolean;
   }
 
   export function renderFairIsle(seed: number | bigint | string): RenderResult;

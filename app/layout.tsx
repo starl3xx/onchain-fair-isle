@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "./providers";
+import { CANONICAL_ORIGIN, MINIAPP_ORIGIN } from "@/lib/urls";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://onchain-fair-isle.vercel.app";
-
+// The mini-app embed launches on the vercel.app domain (where the manifest is
+// registered); everything else — og tags, share pages — is canonical.
 const miniAppEmbed = {
   version: "1",
-  imageUrl: `${baseUrl}/image.png`,
+  imageUrl: `${MINIAPP_ORIGIN}/image.png`,
   button: {
     title: "Knit your sweater NFT!",
     action: {
       type: "launch_miniapp",
       name: "Onchain Fair Isle",
-      url: baseUrl,
-      splashImageUrl: `${baseUrl}/splash.png`,
+      url: MINIAPP_ORIGIN,
+      splashImageUrl: `${MINIAPP_ORIGIN}/splash.png`,
       splashBackgroundColor: "#0a0a0a",
     },
   },
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Onchain Fair Isle",
     description: "Mint generative fair isle knitting pattern NFTs on Base",
-    images: ["/hero.png"],
+    images: [`${CANONICAL_ORIGIN}/hero.png`],
   },
   other: {
     "fc:miniapp": JSON.stringify(miniAppEmbed),
