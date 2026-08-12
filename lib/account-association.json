@@ -1,6 +1,6 @@
 {
-  "_comment": "Signed domain proof from the Farcaster manifest tool (farcaster.xyz/~/developers/mini-apps/manifest). Domain must be exactly onchain-fair-isle.vercel.app, signed by the account that owns the app. Paste the generated header/payload/signature here — until then the manifest serves without it and will not validate.",
-  "header": "",
-  "payload": "",
-  "signature": ""
+  "_comment": "Signed domain proof from the Farcaster manifest tool. fid 6500 (starl3xx), custody key 0xed72f19B0c513F7eDA74eDb436cf327599fc8DA5, domain onchain-fair-isle.vercel.app. Re-sign in the tool if the domain ever changes.",
+  "header": "eyJmaWQiOjY1MDAsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHhlZDcyZjE5QjBjNTEzRjdlREE3NGVEYjQzNmNmMzI3NTk5ZmM4REE1In0",
+  "payload": "eyJkb21haW4iOiJvbmNoYWluLWZhaXItaXNsZS52ZXJjZWwuYXBwIn0",
+  "signature": "sxbte8EHZmzDs7e1ZmmjVxYaPGIUtu+dllWAFRFW39Qk9/dOiMioaLo3BBZzK15UbTuICDQre8TKQ0S8iKyhhRs="
 }
