@@ -3,7 +3,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider, createConfig, http } from "wagmi";
 import { base } from "wagmi/chains";
-import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
+import { farcasterMiniApp } from "@farcaster/miniapp-wagmi-connector";
 import { useState, type ReactNode } from "react";
 
 const config = createConfig({
@@ -11,7 +11,7 @@ const config = createConfig({
   transports: {
     [base.id]: http(),
   },
-  connectors: [farcasterFrame()],
+  connectors: [farcasterMiniApp()],
 });
 
 export function Providers({ children }: { children: ReactNode }) {

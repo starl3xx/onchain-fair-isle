@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import sdk from "@farcaster/frame-sdk";
+import sdk from "@farcaster/miniapp-sdk";
 import { PatternPreview } from "./PatternPreview";
 import { renderFairIsle } from "@/lib/fairisle-renderer";
 import { CANONICAL_ORIGIN, MINIAPP_ORIGIN } from "@/lib/urls";
