@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 <html>
 <head>
   <meta property="fc:frame" content="vNext" />
-  <meta property="fc:frame:image" content="${BASE_URL}/api/preview?seed=${seed}&success=true" />
+  <meta property="fc:frame:image" content="${BASE_URL}/api/preview/png?seed=${seed}&success=true" />
   <meta property="fc:frame:button:1" content="Mint Another" />
   <meta property="fc:frame:button:1:action" content="tx" />
   <meta property="fc:frame:button:1:target" content="${BASE_URL}/api/frame" />

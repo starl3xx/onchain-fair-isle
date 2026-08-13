@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { renderFairIsle } from "@/lib/fairisle-renderer";
-import { CONTRACT_ADDRESS, readOwnerOf } from "@/lib/chain";
+import { unstable_cache } from "next/cache";
+import { CONTRACT_ADDRESS, readOwnerOf, readTotalSupply } from "@/lib/chain";
 import { CANONICAL_ORIGIN } from "@/lib/urls";
 import { Snowfall } from "../../components/Snowfall";
 
@@ -35,22 +36,39 @@ export async function generateMetadata({
 }
 
 // Farcaster identity for the owner, when one exists. Best-effort — the page
-// must not fail because Neynar is slow or the key is absent.
-async function lookupFarcaster(address: string): Promise<{ username: string } | null> {
-  const key = process.env.NEYNAR_API_KEY;
-  if (!key) return null;
-  try {
-    const res = await fetch(
-      `https://api.neynar.com/v2/farcaster/user/bulk-by-address?addresses=${address}`,
-      { headers: { "x-api-key": key }, next: { revalidate: 3600 }, signal: AbortSignal.timeout(3000) }
-    );
-    if (!res.ok) return null;
-    const data = await res.json();
-    const users = data[address.toLowerCase()];
-    return users?.[0]?.username ? { username: users[0].username } : null;
-  } catch {
-    return null;
-  }
+// must not fail because Neynar is slow or the key is absent. Wrapped in
+// unstable_cache because the abort signal makes the fetch itself uncacheable,
+// and one uncached fetch forces the whole page to re-render per request.
+const lookupFarcaster = unstable_cache(
+  async function lookupFarcaster(address: string): Promise<{ username: string } | null> {
+    const key = process.env.NEYNAR_API_KEY;
+    if (!key) return null;
+    try {
+      const res = await fetch(
+        `https://api.neynar.com/v2/farcaster/user/bulk-by-address?addresses=${address}`,
+        { headers: { "x-api-key": key }, signal: AbortSignal.timeout(3000) }
+      );
+      if (!res.ok) return null;
+      const data = await res.json();
+      const users = data[address.toLowerCase()];
+      return users?.[0]?.username ? { username: users[0].username } : null;
+    } catch {
+      return null;
+    }
+  },
+  ["fairisle-farcaster-owner"],
+  { revalidate: 3600 }
+);
+
+// Empty on purpose. A dynamic segment is only ISR-cacheable if this exists at
+// all — without it Next renders the route per request and sends `no-store`,
+// which is why token pages cost a full render on every visit. Returning the
+// real token list instead would fire one RPC per token at build time, and the
+// public endpoint rate-limits long before the collection is done (it already
+// failed the build at 36). Empty means: cache each token the first time
+// someone asks for it, and never make deploys depend on an RPC.
+export async function generateStaticParams() {
+  return [];
 }
 
 export default async function TokenPage({ params }: { params: { id: string } }) {
@@ -106,6 +124,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
           alt={`Onchain Fair Isle #${id} — a fair isle knitting pattern in the ${palette.name} palette${hasGiantSnowflake ? " with a giant snowflake" : ""}.`}
           width={800}
           height={800}
+          fetchPriority="high"
           style={{
             width: "100%",
             height: "auto",

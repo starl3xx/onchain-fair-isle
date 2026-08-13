@@ -74,7 +74,7 @@ export function CollectionGrid({ tokens }: { tokens: TokenCard[] }) {
           gap: "0.9rem",
         }}
       >
-        {visible.map((t) => (
+        {visible.map((t, i) => (
           <Link
             key={t.id}
             href={`/token/${t.id}`}
@@ -87,13 +87,16 @@ export function CollectionGrid({ tokens }: { tokens: TokenCard[] }) {
               color: "var(--foreground)",
             }}
           >
-            {/* Raw img on purpose: the PNG route is already sized + immutable-cached. */}
+            {/* Raw img on purpose: the PNG route is already sized + immutable-cached.
+                The first row is above the fold and holds the LCP element, so it
+                loads eagerly — lazy-loading your own LCP image just delays it. */}
             <img
               src={`/fairisle/api/preview/png?seed=${t.id}&size=400`}
               alt={`Onchain Fair Isle #${t.id} — ${t.palette}${t.hasGiantSnowflake ? ", giant snowflake" : ""}`}
               width={400}
               height={400}
-              loading="lazy"
+              loading={i < 6 ? undefined : "lazy"}
+              fetchPriority={i < 3 ? "high" : undefined}
               decoding="async"
               style={{ width: "100%", height: "auto", display: "block" }}
             />

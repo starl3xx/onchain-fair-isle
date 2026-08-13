@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Providers } from "./providers";
 import { CANONICAL_ORIGIN, MINIAPP_ORIGIN } from "@/lib/urls";
 
 // The mini-app embed launches on the vercel.app domain (where the manifest is
@@ -40,9 +39,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <Providers>{children}</Providers>
-      </body>
+      {/* No wallet providers here — they live in the (wallet) route group, so
+          the collection and token pages ship none of that JavaScript. */}
+      <body>{children}</body>
     </html>
   );
 }
