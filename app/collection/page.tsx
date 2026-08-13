@@ -42,16 +42,20 @@ export default async function CollectionPage() {
       }}
     >
       <Snowfall />
-      <header style={{ textAlign: "center", marginBottom: "2rem" }}>
-        <h1 style={{ fontSize: "1.75rem", fontWeight: 700, marginBottom: "0.5rem" }}>
-          The Collection
-        </h1>
-        <p style={{ color: "var(--muted)", fontSize: "0.95rem" }}>
-          {totalSupply} sweaters knitted so far &mdash; each one a pure function of its
-          token ID.
-        </p>
-      </header>
-      <CollectionGrid tokens={tokens} />
+      {/* Positioned above the fixed zIndex:0 snow — without this, positioned-
+          at-zero paints over non-positioned content and flakes cross the art. */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <header style={{ textAlign: "center", marginBottom: "2rem" }}>
+          <h1 style={{ fontSize: "1.75rem", fontWeight: 700, marginBottom: "0.5rem" }}>
+            The Collection
+          </h1>
+          <p style={{ color: "var(--muted)", fontSize: "0.95rem" }}>
+            {totalSupply} sweaters knitted so far &mdash; each one a pure function of its
+            token ID.
+          </p>
+        </header>
+        <CollectionGrid tokens={tokens} />
+      </div>
     </main>
   );
 }
