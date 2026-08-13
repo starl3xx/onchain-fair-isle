@@ -13,7 +13,7 @@ const miniAppEmbed = {
       type: "launch_miniapp",
       name: "Onchain Fair Isle",
       url: MINIAPP_ORIGIN,
-      splashImageUrl: `${MINIAPP_ORIGIN}/splash.png`,
+      splashImageUrl: `${MINIAPP_ORIGIN}/splash-200.png`,
       splashBackgroundColor: "#0a0a0a",
     },
   },

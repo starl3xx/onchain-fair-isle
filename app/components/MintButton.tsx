@@ -45,7 +45,6 @@ export function MintButton({
   onMintSuccess,
   onMintError,
 }: MintButtonProps) {
-  const [isFarcasterContext, setIsFarcasterContext] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
   const { address, isConnected } = useAccount();
@@ -73,15 +72,15 @@ export function MintButton({
   useEffect(() => {
     const initFrame = async () => {
       try {
-        const context = await sdk.context;
-        setIsFarcasterContext(!!context);
-        if (context) {
-          sdk.actions.ready();
-        }
+        await sdk.context;
       } catch {
-        setIsFarcasterContext(false);
+        // Outside a Farcaster host there is no context — not an error.
+      } finally {
+        // Unconditional: if this ever fails to fire inside a host, the user is
+        // left staring at the splash screen, so it must not depend on a branch.
+        sdk.actions.ready().catch(() => {});
+        setIsReady(true);
       }
-      setIsReady(true);
     };
     initFrame();
   }, []);
