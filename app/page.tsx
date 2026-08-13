@@ -329,6 +329,14 @@ export default function Home() {
                   Waiting for confirmation...
                 </p>
               )}
+
+              {/* The collection link lives on the card, not just the footer —
+                  inside the mini app the footer sits below the fold. */}
+              <p style={{ textAlign: "center", marginTop: "1rem", fontSize: "0.875rem" }}>
+                <a href="/fairisle/collection" style={{ color: "#5b9bd5" }}>
+                  View all {totalSupply !== null ? totalSupply : ""} in the collection →
+                </a>
+              </p>
             </section>
           </div>
         )}
