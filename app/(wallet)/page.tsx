@@ -330,11 +330,15 @@ export default function Home() {
                 </p>
               )}
 
-              {/* The collection link lives on the card, not just the footer —
-                  inside the mini app the footer sits below the fold. */}
+              {/* The one way into the collection: on the card, where it is
+                  above the fold inside the mini app, and carrying the count. */}
               <p style={{ textAlign: "center", marginTop: "1rem", fontSize: "0.875rem" }}>
                 <a href="/fairisle/collection" style={{ color: "#5b9bd5" }}>
-                  View all {totalSupply !== null ? totalSupply : ""} in the collection →
+                  {/* Falls back to a countless label rather than leaving a gap
+                      in the sentence while the supply is still loading. */}
+                  {totalSupply !== null
+                    ? `View all ${totalSupply} in the collection →`
+                    : "View the collection →"}
                 </a>
               </p>
             </section>
@@ -354,11 +358,6 @@ export default function Home() {
           zIndex: 1,
         }}
       >
-        <p style={{ marginBottom: "0.5rem" }}>
-          <a href="/fairisle/collection" style={{ color: "#5b9bd5" }}>
-            View the collection →
-          </a>
-        </p>
         <p>
           Made with 🌠 by{" "}
           <a
