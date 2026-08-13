@@ -29,21 +29,25 @@ export async function GET() {
       iconUrl: `${MINIAPP_ORIGIN}/OFI-icon.png`,
       splashImageUrl: `${MINIAPP_ORIGIN}/splash-200.png`,
       splashBackgroundColor: "#0a0a0a",
-      subtitle: "Generative knitting on Base",
+      // Copy is Jake's original December registration, restored verbatim —
+      // "11 color palettes" is correct (eleven standard; the Nordic Rainbow
+      // is the rare twelfth). Only the URLs moved (basePath) and the dead
+      // webhookUrl was dropped: no /api/webhook route exists in this repo,
+      // and declaring one falsely advertises notification support.
+      subtitle: "Generative NFT collection",
       description:
-        "Mint a one of a kind Fair Isle knitting pattern, drawn deterministically from its token ID. Twelve palettes, a rare Nordic Rainbow, and a giant snowflake chase.",
+        "Fair Isle-inspired generative NFT collection on Base with 11 color palettes, countless patterns, and unlimited delight",
       screenshotUrls: [
         `${MINIAPP_ORIGIN}/screenshots/1-mint.png`,
         `${MINIAPP_ORIGIN}/screenshots/2-collection.png`,
         `${MINIAPP_ORIGIN}/screenshots/3-token.png`,
       ],
       primaryCategory: "art-creativity",
-      tags: ["generative", "knitting", "nft", "base", "art"],
+      tags: ["nft", "art", "generative", "holiday", "base"],
       heroImageUrl: `${MINIAPP_ORIGIN}/hero.png`,
-      tagline: "Knit your sweater NFT",
-      ogTitle: "Onchain Fair Isle",
-      ogDescription:
-        "Generative Fair Isle knitting patterns on Base. Every token is a pure function of its ID.",
+      tagline: "Knit your Fair Isle sweater",
+      ogTitle: "Onchain Fair Isle — Mint Now",
+      ogDescription: "Generative Fair Isle-inspired NFT collection on Base",
       ogImageUrl: `${MINIAPP_ORIGIN}/hero.png`,
       requiredChains: ["eip155:8453"],
       requiredCapabilities: [
