@@ -92,7 +92,9 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
       }}
     >
       <Snowfall />
-      <div className="fade-in">
+      {/* Positioned above the fixed zIndex:0 snow — without this, positioned-
+          at-zero paints over non-positioned content and flakes cross the art. */}
+      <div className="fade-in" style={{ position: "relative", zIndex: 1 }}>
         <p style={{ marginBottom: "1rem", fontSize: "0.85rem" }}>
           <Link href="/collection" style={{ color: "var(--muted)" }}>
             ← The Collection
