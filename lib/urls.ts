@@ -16,3 +16,15 @@
 export const BASE_PATH = "/fairisle";
 export const CANONICAL_ORIGIN = `https://starl3xx.fun${BASE_PATH}`;
 export const MINIAPP_ORIGIN = `https://onchain-fair-isle.vercel.app${BASE_PATH}`;
+
+// The deployed FairIsleNFT on Base. Lives here rather than in chain.ts so a
+// client component can reach it without dragging viem and next/cache into the
+// browser bundle; chain.ts re-exports it for server callers.
+export const CONTRACT_ADDRESS = (process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ||
+  "0x99eC83c41DFfCA01Ea834Cd949b84574eF76fB6C") as `0x${string}`;
+
+// OpenSea relisted the collection on 13 August 2026. /assets/ is the legacy
+// form and 302s to /item/, so link the canonical one and skip the hop.
+export const OPENSEA_COLLECTION = "https://opensea.io/collection/fair-isle";
+export const openSeaItem = (tokenId: number | string | bigint) =>
+  `https://opensea.io/item/base/${CONTRACT_ADDRESS}/${tokenId}`;
