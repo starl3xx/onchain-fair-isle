@@ -7,8 +7,9 @@ import { Snowfall } from "../components/Snowfall";
 import { MiniAppReady } from "../components/MiniAppReady";
 import Link from "next/link";
 
-// Supply grows as people knit; re-read it every five minutes.
-export const revalidate = 300;
+// Supply grows as people knit, and this is the page people check straight
+// after minting — so it re-reads every minute rather than every five.
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "The Collection — Onchain Fair Isle",
