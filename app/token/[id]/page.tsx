@@ -25,7 +25,7 @@ export async function generateMetadata({
   const id = parseId(params.id);
   if (id === null) return { title: "Onchain Fair Isle" };
   const { palette } = renderFairIsle(id);
-  const title = `Onchain Fair Isle #${id} — ${palette.name}`;
+  const title = `Onchain Fair Isle #${id}: ${palette.name}`;
 
   // A per-token embed, so a shared token renders as its own art in a feed
   // rather than the generic collection card. The button launches straight
@@ -145,7 +145,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
 
         <img
           src={`/fairisle/api/preview/png?seed=${id}`}
-          alt={`Onchain Fair Isle #${id} — a fair isle knitting pattern in the ${palette.name} palette${hasGiantSnowflake ? " with a giant snowflake" : ""}.`}
+          alt={`Onchain Fair Isle #${id}: a fair isle knitting pattern in the ${palette.name} palette${hasGiantSnowflake ? " with a giant snowflake" : ""}.`}
           width={800}
           height={800}
           fetchPriority="high"

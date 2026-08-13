@@ -47,7 +47,7 @@ export async function GET() {
       tags: ["nft", "art", "generative", "holiday", "base"],
       heroImageUrl: `${MINIAPP_ORIGIN}/hero.png`,
       tagline: "Knit your Fair Isle sweater",
-      ogTitle: "Onchain Fair Isle — Mint Now",
+      ogTitle: "Onchain Fair Isle | Mint Now",
       ogDescription: "Generative Fair Isle-inspired NFT collection on Base",
       ogImageUrl: `${MINIAPP_ORIGIN}/hero.png`,
       requiredChains: ["eip155:8453"],
