@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { renderFairIsle, type RenderResult } from "@/lib/fairisle-renderer";
+import { renderFairIslePattern } from "@/lib/fairisle-renderer";
 
 interface PatternPreviewProps {
   seed: number;
@@ -20,15 +20,13 @@ export function PatternPreview({
     setMounted(true);
   }, []);
 
-  const { svg, palette, isRare } = useMemo(() => {
-    if (!mounted) return { svg: "", palette: { name: "", colors: [] }, isRare: false };
-    const result = renderFairIsle(seed);
-    // Replace fixed dimensions with 100% to scale with container
-    const scaledSvg = result.svg.replace(
-      /width="800" height="800"/,
-      'width="100%" height="100%"'
-    );
-    return { ...result, svg: scaledSvg };
+  // Only the traits are computed here. Building the SVG meant an 8 MB string
+  // and 60,000 DOM nodes for a 300px box — on every shuffle, on a phone. The
+  // picture now comes from the PNG route, which renders in milliseconds and is
+  // cached at the edge; renderFairIslePattern skips the markup entirely.
+  const { palette, isRare } = useMemo(() => {
+    if (!mounted) return { palette: { name: "", colors: [] }, isRare: false };
+    return renderFairIslePattern(seed);
   }, [seed, mounted]);
 
   if (!mounted) {
@@ -61,8 +59,16 @@ export function PatternPreview({
           overflow: "hidden",
           boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
         }}
-        dangerouslySetInnerHTML={{ __html: svg }}
-      />
+      >
+        <img
+          src={`/fairisle/api/preview/png?seed=${seed}&size=${size * 2}`}
+          alt={`Fair Isle pattern preview in the ${palette.name} palette`}
+          width={size}
+          height={size}
+          fetchPriority="high"
+          style={{ width: "100%", height: "100%", display: "block" }}
+        />
+      </div>
       {showPalette && (
         <div
           style={{

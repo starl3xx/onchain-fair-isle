@@ -43,8 +43,18 @@ async function stitchTile(color: string, px: number): Promise<Buffer> {
  * inside its own bounds, so tiling is pixel-identical to rendering the whole
  * document — but costs milliseconds rather than seconds.
  */
-async function renderPng(seed: number, size: number): Promise<Buffer> {
-  const { grid, palette } = renderFairIslePattern(seed);
+// The post-mint badge, drawn in the renderer's 800-unit space and scaled to
+// whatever the caller asked for.
+function successOverlay(size: number, palette: string, isRare: boolean): string {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="${size}" height="${size}">
+    <rect x="250" y="350" width="300" height="100" rx="16" fill="#111" fill-opacity="0.95"/>
+    <text x="400" y="395" font-family="sans-serif" font-size="24" font-weight="bold" fill="#4ade80" text-anchor="middle">Minted!</text>
+    <text x="400" y="425" font-family="sans-serif" font-size="14" fill="#888" text-anchor="middle">${palette}${isRare ? " (Rare)" : ""}</text>
+  </svg>`;
+}
+
+async function renderPng(seed: number, size: number, success = false): Promise<Buffer> {
+  const { grid, palette, isRare } = renderFairIslePattern(seed);
 
   // Cells must land on whole pixels, so render at the nearest exact multiple
   // and resize only when the caller asked for something else.
@@ -75,9 +85,17 @@ async function renderPng(seed: number, size: number): Promise<Buffer> {
     }
   }
 
-  const image = sharp(canvas, {
+  let image = sharp(canvas, {
     raw: { width: exact, height: exact, channels: CHANNELS },
   });
+  if (success) {
+    image = sharp(
+      await image
+        .composite([{ input: Buffer.from(successOverlay(exact, palette.name, isRare)), top: 0, left: 0 }])
+        .png()
+        .toBuffer()
+    );
+  }
   // No withMetadata(): it would attach an ICC profile and grow every file by
   // ~523 bytes. Output is pixel-identical to the old librsvg path; the only
   // difference is the pHYs DPI stamp, which no web client reads.
@@ -102,7 +120,8 @@ export async function GET(request: NextRequest) {
       ? Math.min(Math.max(parsedSize, GRID_COLS), MAX_SIZE)
       : DEFAULT_SIZE;
 
-    const pngBuffer = await renderPng(seed, size);
+    const success = searchParams.get("success") === "true";
+    const pngBuffer = await renderPng(seed, size, success);
 
     return new NextResponse(new Uint8Array(pngBuffer), {
       headers: {

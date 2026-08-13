@@ -2,10 +2,10 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { useReadContract } from "wagmi";
-import { PatternPreview } from "./components/PatternPreview";
-import { MintButton } from "./components/MintButton";
-import { SuccessScreen } from "./components/SuccessScreen";
-import { Snowfall } from "./components/Snowfall";
+import { PatternPreview } from "@/app/components/PatternPreview";
+import { MintButton } from "@/app/components/MintButton";
+import { SuccessScreen } from "@/app/components/SuccessScreen";
+import { Snowfall } from "@/app/components/Snowfall";
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
 

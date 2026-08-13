@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { SuccessScreen } from "../components/SuccessScreen";
-import { Snowfall } from "../components/Snowfall";
+import { SuccessScreen } from "@/app/components/SuccessScreen";
+import { Snowfall } from "@/app/components/Snowfall";
 
 export default function SuccessPreviewPage() {
   const [seed, setSeed] = useState<number>(() => Math.floor(Math.random() * 2147483647));
