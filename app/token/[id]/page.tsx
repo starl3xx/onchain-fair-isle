@@ -4,8 +4,9 @@ import { notFound } from "next/navigation";
 import { renderFairIsle } from "@/lib/fairisle-renderer";
 import { unstable_cache } from "next/cache";
 import { CONTRACT_ADDRESS, readOwnerOf, readTotalSupply } from "@/lib/chain";
-import { CANONICAL_ORIGIN } from "@/lib/urls";
+import { CANONICAL_ORIGIN, MINIAPP_ORIGIN } from "@/lib/urls";
 import { Snowfall } from "../../components/Snowfall";
+import { MiniAppReady } from "../../components/MiniAppReady";
 
 // Owners change on transfer; re-read every five minutes.
 export const revalidate = 300;
@@ -25,12 +26,34 @@ export async function generateMetadata({
   if (id === null) return { title: "Onchain Fair Isle" };
   const { palette } = renderFairIsle(id);
   const title = `Onchain Fair Isle #${id} — ${palette.name}`;
+
+  // A per-token embed, so a shared token renders as its own art in a feed
+  // rather than the generic collection card. The button launches straight
+  // into this token; MiniAppReady below dismisses the splash when it does.
+  const miniAppEmbed = {
+    version: "1",
+    imageUrl: `${MINIAPP_ORIGIN}/api/preview/png?seed=${id}&embed=true`,
+    button: {
+      title: `View #${id}`,
+      action: {
+        type: "launch_miniapp",
+        name: "Onchain Fair Isle",
+        url: `${MINIAPP_ORIGIN}/token/${id}`,
+        splashImageUrl: `${MINIAPP_ORIGIN}/splash-200.png`,
+        splashBackgroundColor: "#0a0a0a",
+      },
+    },
+  };
+
   return {
     title,
     description: `A generative fair isle knitting pattern in ${palette.name}, drawn deterministically from token ID ${id}.`,
     openGraph: {
       title,
       images: [`${CANONICAL_ORIGIN}/api/preview/png?seed=${id}`],
+    },
+    other: {
+      "fc:miniapp": JSON.stringify(miniAppEmbed),
     },
   };
 }
@@ -110,6 +133,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
       }}
     >
       <Snowfall />
+      <MiniAppReady />
       {/* Positioned above the fixed zIndex:0 snow — without this, positioned-
           at-zero paints over non-positioned content and flakes cross the art. */}
       <div className="fade-in" style={{ position: "relative", zIndex: 1 }}>

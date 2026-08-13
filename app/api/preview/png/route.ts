@@ -13,6 +13,10 @@ export const maxDuration = 60;
 const DEFAULT_SIZE = 800;
 const MAX_SIZE = 2000;
 const CHANNELS = 4;
+// Farcaster embeds are 3:2; this sits inside the 600x400-3000x2000 range.
+const EMBED_WIDTH = 1200;
+const EMBED_HEIGHT = 800;
+const APP_BACKGROUND = { r: 10, g: 10, b: 10, alpha: 1 }; // --background in globals.css
 
 // A stitch tile is a pure function of (colour, pixel size), and a pattern uses
 // at most five colours. Instances stay warm between requests, so this turns
@@ -102,6 +106,27 @@ async function renderPng(seed: number, size: number, success = false): Promise<B
   return (exact === size ? image : image.resize(size, size)).png().toBuffer();
 }
 
+/**
+ * The same pattern in the 3:2 frame Farcaster embeds require. The art is
+ * square and its bands read as a whole, so it is centred rather than cropped —
+ * the side margins take the app's own background so the card looks deliberate
+ * in a feed rather than letterboxed.
+ */
+async function renderEmbedPng(seed: number): Promise<Buffer> {
+  const art = await renderPng(seed, EMBED_HEIGHT);
+  return sharp({
+    create: {
+      width: EMBED_WIDTH,
+      height: EMBED_HEIGHT,
+      channels: CHANNELS,
+      background: APP_BACKGROUND,
+    },
+  })
+    .composite([{ input: art, left: (EMBED_WIDTH - EMBED_HEIGHT) / 2, top: 0 }])
+    .png()
+    .toBuffer();
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -121,7 +146,10 @@ export async function GET(request: NextRequest) {
       : DEFAULT_SIZE;
 
     const success = searchParams.get("success") === "true";
-    const pngBuffer = await renderPng(seed, size, success);
+    const embed = searchParams.get("embed") === "true";
+    const pngBuffer = embed
+      ? await renderEmbedPng(seed)
+      : await renderPng(seed, size, success);
 
     return new NextResponse(new Uint8Array(pngBuffer), {
       headers: {
