@@ -76,10 +76,6 @@ export default async function CollectionPage() {
           <h1 style={{ fontSize: "1.75rem", fontWeight: 700, marginBottom: "0.5rem" }}>
             The Collection
           </h1>
-          <p style={{ color: "var(--muted)", fontSize: "0.95rem" }}>
-            {totalSupply} sweaters knitted so far &mdash; each one a pure function of its
-            token ID.
-          </p>
         </header>
         <CollectionGrid tokens={tokens} />
       </div>

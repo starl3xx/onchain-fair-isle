@@ -74,6 +74,25 @@ export const readTotalSupply = unstable_cache(
   { revalidate: 60 }
 );
 
+// The same read, but near-live: the collection page calls this on mount to
+// catch mints newer than its cached HTML. Ten seconds is short enough that a
+// fresh mint feels immediate, and long enough that traffic cannot turn into
+// one RPC call per visitor — it is six calls a minute at any load.
+export const readTotalSupplyLive = unstable_cache(
+  async function readTotalSupplyLive(): Promise<number> {
+    const n = await withRetry(() =>
+      publicClient.readContract({
+        address: CONTRACT_ADDRESS,
+        abi: READ_ABI,
+        functionName: "totalSupply",
+      })
+    );
+    return Number(n);
+  },
+  ["fairisle-total-supply-live"],
+  { revalidate: 10 }
+);
+
 export const readOwnerOf = unstable_cache(
   async function readOwnerOf(tokenId: number): Promise<`0x${string}` | null> {
   try {

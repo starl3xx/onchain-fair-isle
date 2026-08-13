@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 
 export interface TokenCard {
@@ -18,8 +18,40 @@ const FILTERS: { key: Filter; label: (counts: Record<Filter, number>) => string 
   { key: "snowflake", label: (c) => `❄️ Giant snowflake ${c.snowflake}` },
 ];
 
-export function CollectionGrid({ tokens }: { tokens: TokenCard[] }) {
+export function CollectionGrid({ tokens: initialTokens }: { tokens: TokenCard[] }) {
   const [filter, setFilter] = useState<Filter>("all");
+  const [tokens, setTokens] = useState<TokenCard[]>(initialTokens);
+
+  // The page's HTML is cached, so it can be a minute or two behind the chain.
+  // Ask for anything minted since it was generated — on mount, and again when
+  // the tab regains focus, which is exactly the moment someone comes back from
+  // minting. Failures are silent: the cached grid is still correct, just older.
+  const knownCount = useRef(initialTokens.length);
+
+  const syncWithChain = useCallback(async () => {
+    try {
+      const res = await fetch(`/fairisle/api/collection?from=${knownCount.current}`, {
+        cache: "no-store",
+      });
+      if (!res.ok) return;
+      const data: { tokens: TokenCard[] } = await res.json();
+      if (data.tokens?.length) {
+        knownCount.current += data.tokens.length;
+        setTokens((prev) => [...prev, ...data.tokens]);
+      }
+    } catch {
+      // Offline or rate-limited — keep showing what we have.
+    }
+  }, []);
+
+  useEffect(() => {
+    syncWithChain();
+    const onVisible = () => {
+      if (document.visibilityState === "visible") syncWithChain();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, [syncWithChain]);
 
   const counts = useMemo<Record<Filter, number>>(
     () => ({
@@ -38,6 +70,9 @@ export function CollectionGrid({ tokens }: { tokens: TokenCard[] }) {
 
   return (
     <div className="fade-in">
+      <p style={{ color: "var(--muted)", fontSize: "0.95rem", textAlign: "center", marginBottom: "2rem" }}>
+        {tokens.length} sweaters knitted so far &mdash; each one a pure function of its token ID.
+      </p>
       <div
         style={{
           display: "flex",
