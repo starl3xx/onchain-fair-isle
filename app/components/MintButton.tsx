@@ -11,7 +11,7 @@ import {
 } from "wagmi";
 import { parseEther } from "viem";
 import { base } from "wagmi/chains";
-import sdk from "@farcaster/frame-sdk";
+import sdk from "@farcaster/miniapp-sdk";
 import { useNeynarUser } from "@/app/hooks/useNeynarUser";
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
@@ -110,12 +110,13 @@ export function MintButton({
   }, [writeError, onMintError]);
 
   const handleConnect = useCallback(async () => {
-    // Try Farcaster Frame connector first
-    const frameConnector = connectors.find(
-      (c) => c.id === "farcasterFrame"
-    );
-    if (frameConnector) {
-      connect({ connector: frameConnector });
+    // The connector's id is "farcaster" — it always was, even under the old
+    // package name, so this lookup never matched and every mint quietly fell
+    // through to connectors[0]. That happened to be the same connector while
+    // it was the only one configured; adding a second would have broken minting.
+    const farcasterConnector = connectors.find((c) => c.id === "farcaster");
+    if (farcasterConnector) {
+      connect({ connector: farcasterConnector });
     } else if (connectors.length > 0) {
       connect({ connector: connectors[0] });
     }
