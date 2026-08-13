@@ -8,11 +8,10 @@ import {
 } from "viem";
 import { base } from "viem/chains";
 
-// The deployed FairIsleNFT on Base mainnet. The env var wins when set (it is
-// on Vercel); the literal keeps local dev and any misconfigured environment
-// reading the real collection rather than silently rendering nothing.
-export const CONTRACT_ADDRESS = (process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ||
-  "0x99eC83c41DFfCA01Ea834Cd949b84574eF76fB6C") as `0x${string}`;
+// Defined in urls.ts so client components can use it too; re-exported here
+// because server callers have always imported it from this module.
+export { CONTRACT_ADDRESS } from "./urls";
+import { CONTRACT_ADDRESS } from "./urls";
 
 export const READ_ABI = [
   {

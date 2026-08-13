@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { renderFairIsle } from "@/lib/fairisle-renderer";
 import { unstable_cache } from "next/cache";
 import { CONTRACT_ADDRESS, readOwnerOf, readTotalSupply } from "@/lib/chain";
-import { CANONICAL_ORIGIN, MINIAPP_ORIGIN } from "@/lib/urls";
+import { CANONICAL_ORIGIN, MINIAPP_ORIGIN, openSeaItem } from "@/lib/urls";
 import { Snowfall } from "../../components/Snowfall";
 import { MiniAppReady } from "../../components/MiniAppReady";
 
@@ -203,7 +203,7 @@ export default async function TokenPage({ params }: { params: { id: string } }) 
             View on BaseScan
           </a>
           <a
-            href={`https://opensea.io/assets/base/${CONTRACT_ADDRESS}/${id}`}
+            href={openSeaItem(id)}
             target="_blank"
             rel="noreferrer"
             style={{

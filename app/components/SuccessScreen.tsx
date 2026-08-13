@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import sdk from "@farcaster/miniapp-sdk";
 import { PatternPreview } from "./PatternPreview";
 import { renderFairIsle } from "@/lib/fairisle-renderer";
-import { CANONICAL_ORIGIN, MINIAPP_ORIGIN } from "@/lib/urls";
+import { CANONICAL_ORIGIN, MINIAPP_ORIGIN, openSeaItem } from "@/lib/urls";
 
 async function svgToPngBlob(svgString: string, width = 2000, height = 2000): Promise<Blob> {
   return new Promise((resolve, reject) => {
@@ -234,7 +234,7 @@ export function SuccessScreen({
         </button>
 
         <a
-          href={`https://opensea.io/assets/base/${process.env.NEXT_PUBLIC_CONTRACT_ADDRESS}/${tokenId}`}
+          href={openSeaItem(tokenId)}
           target="_blank"
           rel="noopener noreferrer"
           style={{
