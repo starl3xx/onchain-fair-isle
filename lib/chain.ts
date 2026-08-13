@@ -68,7 +68,10 @@ export const readTotalSupply = unstable_cache(
     return Number(n);
   },
   ["fairisle-total-supply"],
-  { revalidate: 300 }
+  // Shorter than the owner cache: supply is what changes when someone mints,
+  // and it nests inside the page's own ISR window, so a long TTL here would
+  // stack on top of that and delay a new token twice over.
+  { revalidate: 60 }
 );
 
 export const readOwnerOf = unstable_cache(
