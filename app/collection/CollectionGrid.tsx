@@ -71,7 +71,7 @@ export function CollectionGrid({ tokens: initialTokens }: { tokens: TokenCard[] 
   return (
     <div className="fade-in">
       <p style={{ color: "var(--muted)", fontSize: "0.95rem", textAlign: "center", marginBottom: "2rem" }}>
-        {tokens.length} sweaters knitted so far &mdash; each one a pure function of its token ID.
+        {tokens.length} sweaters knitted so far, each one a pure function of its token ID.
       </p>
       <div
         style={{
@@ -127,7 +127,7 @@ export function CollectionGrid({ tokens: initialTokens }: { tokens: TokenCard[] 
                 loads eagerly — lazy-loading your own LCP image just delays it. */}
             <img
               src={`/fairisle/api/preview/png?seed=${t.id}&size=400`}
-              alt={`Onchain Fair Isle #${t.id} — ${t.palette}${t.hasGiantSnowflake ? ", giant snowflake" : ""}`}
+              alt={`Onchain Fair Isle #${t.id}: ${t.palette}${t.hasGiantSnowflake ? ", giant snowflake" : ""}`}
               width={400}
               height={400}
               loading={i < 6 ? undefined : "lazy"}
@@ -152,7 +152,7 @@ export function CollectionGrid({ tokens: initialTokens }: { tokens: TokenCard[] 
       {visible.length === 0 && (
         <p style={{ textAlign: "center", color: "var(--muted)", marginTop: "2rem" }}>
           {filter === "snowflake"
-            ? "None knitted yet — the giant snowflake lands on roughly one pattern in a hundred. Still out there."
+            ? "None knitted yet; the giant snowflake lands on roughly one pattern in a hundred. Still out there."
             : "None knitted yet."}
         </p>
       )}

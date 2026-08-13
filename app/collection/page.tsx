@@ -12,13 +12,13 @@ import Link from "next/link";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "The Collection — Onchain Fair Isle",
+  title: "The Collection | Onchain Fair Isle",
   description:
-    "Every Fair Isle knitted so far — palettes, rare Nordic Rainbows, and giant snowflakes.",
+    "Every Fair Isle knitted so far: palettes, rare Nordic Rainbows, and giant snowflakes.",
   openGraph: {
-    title: "The Collection — Onchain Fair Isle",
+    title: "The Collection | Onchain Fair Isle",
     description:
-      "Every Fair Isle knitted so far — palettes, rare Nordic Rainbows, and giant snowflakes.",
+      "Every Fair Isle knitted so far: palettes, rare Nordic Rainbows, and giant snowflakes.",
     images: [`${CANONICAL_ORIGIN}/hero.png`],
   },
   other: {
