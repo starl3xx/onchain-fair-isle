@@ -29,14 +29,15 @@ export async function GET() {
       iconUrl: `${MINIAPP_ORIGIN}/OFI-icon.png`,
       splashImageUrl: `${MINIAPP_ORIGIN}/splash-200.png`,
       splashBackgroundColor: "#0a0a0a",
-      // Copy is Jake's original December registration, restored verbatim —
-      // "11 color palettes" is correct (eleven standard; the Nordic Rainbow
-      // is the rare twelfth). Only the URLs moved (basePath) and the dead
-      // webhookUrl was dropped: no /api/webhook route exists in this repo,
-      // and declaring one falsely advertises notification support.
+      // Copy is Jake's original December registration. Two deliberate edits
+      // since: the URLs moved (basePath), and the dead webhookUrl was dropped
+      // because no /api/webhook route exists here and declaring one falsely
+      // advertises notification support. The count is twelve — eleven standard
+      // colourways plus the rare Nordic Rainbow, which the renderer exports as
+      // the twelfth entry in PALETTES; it read 11 until 2026-08-13.
       subtitle: "Generative NFT collection",
       description:
-        "Fair Isle-inspired generative NFT collection on Base with 11 color palettes, countless patterns, and unlimited delight",
+        "Fair Isle-inspired generative NFT collection on Base with 12 color palettes, countless patterns, and unlimited delight",
       screenshotUrls: [
         `${MINIAPP_ORIGIN}/screenshots/1-mint.png`,
         `${MINIAPP_ORIGIN}/screenshots/2-collection.png`,
